@@ -1,0 +1,70 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
+apply plugin: 'maven'
+apply from:  "gradle/sec.properties.gradle"
+
+group 'io.nextunit.core'
+version '0.0.1-SNAPSHOT'
+
+jar {
+    baseName = 'core-feature-toggle'
+    version =  project.version
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+dependencies {
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '1.5.4.RELEASE'
+    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '1.5.4.RELEASE'
+
+    testCompile 'junit:junit:4.12'
+
+    testCompile group: 'org.powermock', name: 'powermock-module-junit4', version: '1.7.0'
+    testCompile group: 'org.powermock', name: 'powermock-api-mockito', version: '1.7.0'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '1.10.19'
+}
+
+buildscript {
+    repositories {
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
+    }
+}
+
+uploadArchives {
+    def releaseArtifactoryUrl = project.getSecuredProperty("artifactoryReleaseUrl")
+    def snapshotArtifactoryUrl = project.getSecuredProperty("artifactorySnapshotUrl")
+    def artifactoryUser = project.getSecuredProperty("artifactoryUser")
+    def artifactoryPassword = project.getSecuredProperty("artifactoryPassword")
+
+    repositories {
+        mavenDeployer {
+            repository(url: releaseArtifactoryUrl) {
+                authentication(userName: artifactoryUser, password: artifactoryPassword)
+            }
+            snapshotRepository(url: snapshotArtifactoryUrl) {
+                authentication(userName: artifactoryUser, password: artifactoryPassword)
+            }
+
+            pom.version = project.version
+            pom.artifactId = "core-feature-toggle"
+            pom.groupId = "io.nextunit.core"
+        }
+    }
+}
+
