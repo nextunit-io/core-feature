@@ -49,16 +49,7 @@ public class FeatureService {
      * @param parameters  The configuration parameters.
      */
     public void addFeatureParameters(String featureName, Map<String, Serializable> parameters) {
-        FeatureConfiguration configuration = featureConfigurationRepository.findOne(featureName);
-
-        if (configuration == null) {
-            throw FeatureNotFoundException
-                    .builder()
-                    .featureName(featureName)
-                    .message(String.format("Feature '%s' not found.", featureName))
-                    .build();
-        }
-
+        FeatureConfiguration configuration = getFeatureConfiguration(featureName);
         addFeatureParameters(configuration, parameters);
     }
 
@@ -70,15 +61,7 @@ public class FeatureService {
      * @param parameter   The parameter which should be stored for the key at the feature
      */
     public void addFeatureParameters(String featureName, String key, Serializable parameter) {
-        FeatureConfiguration configuration = featureConfigurationRepository.findOne(featureName);
-
-        if (configuration == null) {
-            throw FeatureNotFoundException
-                    .builder()
-                    .featureName(featureName)
-                    .message(String.format("Feature '%s' not found.", featureName))
-                    .build();
-        }
+        FeatureConfiguration configuration = getFeatureConfiguration(featureName);
 
         HashMap<String, Serializable> map = new HashMap<>();
         map.put(key, parameter);
@@ -104,6 +87,29 @@ public class FeatureService {
      */
     public List<FeatureConfiguration> getFeatureConfigurations() {
         return featureConfigurationRepository.findAll();
+    }
+
+    /**
+     * Returns a single feature configuration. If the configuration is not available it will be
+     * thrown a {@link FeatureNotFoundException}.
+     *
+     * @param featureName The requested featureName
+     *
+     * @return FeatureConfiguration
+     */
+    public FeatureConfiguration getFeatureConfiguration(String featureName) {
+        FeatureConfiguration featureConfiguration = featureConfigurationRepository
+                .findOne(featureName);
+
+        if (featureConfiguration == null) {
+            throw FeatureNotFoundException
+                    .builder()
+                    .featureName(featureName)
+                    .message(String.format("Feature '%s' not found.", featureName))
+                    .build();
+        }
+
+        return featureConfiguration;
     }
 
     /**

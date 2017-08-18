@@ -128,7 +128,7 @@ public class FeatureServiceTest {
     public void getFeatureConfigurations() {
         // GIVEN
         List<FeatureConfiguration> configurationList = Arrays.asList(
-                configurationMock,configurationMock);
+                configurationMock, configurationMock);
         Mockito.when(featureConfigurationRepositoryMock.findAll()).thenReturn(configurationList);
 
         // WHEN
@@ -210,6 +210,34 @@ public class FeatureServiceTest {
         featureService.addFeatureParameters(featureName, new HashMap<String, Serializable>() {{
             put(parameterKey, parameterValue);
         }});
+
+        // THEN
+        Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);
+    }
+
+    @Test
+    public void getFeatureConfigurationSuccess() {
+        // GIVEN
+        Mockito.when(featureConfigurationRepositoryMock.findOne(featureName))
+                .thenReturn(configurationMock);
+
+        // WHEN
+        FeatureConfiguration config = featureService.getFeatureConfiguration(featureName);
+
+        // THEN
+        Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);
+
+        Assert.assertEquals(config, configurationMock);
+    }
+
+    @Test(expected = FeatureNotFoundException.class)
+    public void getFeatureConfigurationNotFound() {
+        // GIVEN
+        Mockito.when(featureConfigurationRepositoryMock.findOne(featureName))
+                .thenReturn(null);
+
+        // WHEN
+        featureService.getFeatureConfiguration(featureName);
 
         // THEN
         Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);
