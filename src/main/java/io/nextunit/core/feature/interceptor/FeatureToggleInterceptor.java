@@ -1,15 +1,18 @@
-package io.nextunit.core.featuretoggle.interceptor;
+package io.nextunit.core.feature.interceptor;
 
-import io.nextunit.core.featuretoggle.annotation.FeatureToggle;
-import io.nextunit.core.featuretoggle.service.FeatureToggleService;
+import io.nextunit.core.feature.annotation.FeatureToggle;
+import io.nextunit.core.feature.service.FeatureService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collections;
 
 /**
  * FeatureToggleInterceptor prevents invoking a method, if there is a {@link FeatureToggle}
@@ -17,7 +20,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class FeatureToggleInterceptor extends HandlerInterceptorAdapter {
     @Autowired
-    private FeatureToggleService featureToggleService;
+    private FeatureService featureService;
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -31,13 +34,21 @@ public class FeatureToggleInterceptor extends HandlerInterceptorAdapter {
                 logger.info("Feature toggle check for method " +
                         handler.toString());
                 for (String featureName: annotation.value()) {
-                    if (!featureToggleService.isFeatureActive(featureName)) {
+                    if (!featureService.isFeatureActive(featureName)) {
 
                         logger.info("Feature " + featureName + " is not activated." +
                                         "Handler will not be invoked.");
 
-                        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
-                        return false;
+                        HttpHeaders headers = new HttpHeaders();
+                        Collections.list(request.getHeaderNames()).forEach(headerName -> {
+                            headers.add(headerName, request.getHeader(headerName));
+                        });
+
+                        throw new NoHandlerFoundException(
+                                request.getMethod(),
+                                request.getRequestURI(),
+                                headers
+                        );
                     }
                 }
             }

@@ -1,5 +1,5 @@
-# core-feature-toggle
-Spring boot feature toggle annotation to toggle features on and off. 
+# core-feature
+Spring boot feature configurations and toggle 
 
 ## Activate Feature toggle package
 

@@ -1,4 +1,4 @@
-package io.nextunit.core.featuretoggle;
+package io.nextunit.core.feature;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Configuration;

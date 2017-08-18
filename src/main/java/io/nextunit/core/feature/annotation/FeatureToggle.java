@@ -1,4 +1,4 @@
-package io.nextunit.core.featuretoggle.annotation;
+package io.nextunit.core.feature.annotation;
 
 import java.lang.annotation.*;
 

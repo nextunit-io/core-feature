@@ -12,10 +12,10 @@ apply plugin: 'maven'
 apply from:  "gradle/sec.properties.gradle"
 
 group 'io.nextunit.core'
-version '0.0.1-SNAPSHOT'
+version '0.0.2-SNAPSHOT'
 
 jar {
-    baseName = 'core-feature-toggle'
+    baseName = 'core-feature'
     version =  project.version
 }
 
@@ -62,7 +62,7 @@ uploadArchives {
             }
 
             pom.version = project.version
-            pom.artifactId = "core-feature-toggle"
+            pom.artifactId = "core-feature"
             pom.groupId = "io.nextunit.core"
         }
     }

@@ -1,10 +1,11 @@
-package io.nextunit.core.featuretoggle.entity;
+package io.nextunit.core.feature.entity;
 
 
 import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Configuration for feature toggle. If a feature is activated, the name with some data is
@@ -18,7 +19,7 @@ import java.io.Serializable;
 @Entity
 @Table(name = "feature_configuration",
         uniqueConstraints = @UniqueConstraint(columnNames = {"name"}))
-public class Configuration {
+public class FeatureConfiguration {
     @Id
     @Column
     private String name;
@@ -26,5 +27,5 @@ public class Configuration {
     @Lob
     @Column
     @Setter
-    private Serializable value;
+    private Map<String, Serializable> parameters;
 }

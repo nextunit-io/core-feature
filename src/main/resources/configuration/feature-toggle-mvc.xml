@@ -8,6 +8,6 @@
                http://www.springframework.org/schema/mvc/spring-mvc.xsd">
 
     <mvc:interceptors>
-        <bean class="io.nextunit.core.featuretoggle.interceptor.FeatureToggleInterceptor" />
+        <bean class="io.nextunit.core.feature.interceptor.FeatureToggleInterceptor" />
     </mvc:interceptors>
 </beans>
