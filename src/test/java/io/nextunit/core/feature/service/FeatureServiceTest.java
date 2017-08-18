@@ -2,6 +2,7 @@ package io.nextunit.core.feature.service;
 
 import io.nextunit.core.feature.entity.FeatureConfiguration;
 import io.nextunit.core.feature.exception.FeatureNotFoundException;
+import io.nextunit.core.feature.exception.FeatureParameterNotFoundException;
 import io.nextunit.core.feature.repository.FeatureConfigurationRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -238,6 +239,55 @@ public class FeatureServiceTest {
 
         // WHEN
         featureService.getFeatureConfiguration(featureName);
+
+        // THEN
+        Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);
+    }
+
+    @Test
+    public void removeFeatureParameterSuccess() {
+        // GIVEN
+        HashMap<String, Serializable> parameterHashMap = new HashMap<>();
+        parameterHashMap.put(parameterKey, parameterValue);
+
+        Mockito.when(featureConfigurationRepositoryMock.findOne(featureName))
+                .thenReturn(configurationMock);
+        Mockito.when(configurationMock.getParameters()).thenReturn(parameterHashMap);
+
+        // WHEN
+        featureService.removeFeatureParameter(featureName, parameterKey);
+
+        // THEN
+        Assert.assertEquals(0, parameterHashMap.size());
+        Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);
+        Mockito.verify(configurationMock, Mockito.times(3)).getParameters();
+    }
+
+    @Test(expected = FeatureParameterNotFoundException.class)
+    public void removeFeatureParameterParameterNotFound() {
+        // GIVEN
+        HashMap<String, Serializable> parameterHashMap = new HashMap<>();
+
+        Mockito.when(featureConfigurationRepositoryMock.findOne(featureName))
+                .thenReturn(configurationMock);
+        Mockito.when(configurationMock.getParameters()).thenReturn(parameterHashMap);
+
+        // WHEN
+        featureService.removeFeatureParameter(featureName, parameterKey);
+
+        // THEN
+        Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);
+        Mockito.verify(configurationMock, Mockito.times(1)).getParameters();
+    }
+
+    @Test(expected = FeatureNotFoundException.class)
+    public void removeFeatureParameterConfigNotFound() {
+        // GIVEN
+        Mockito.when(featureConfigurationRepositoryMock.findOne(featureName))
+                .thenReturn(null);
+
+        // WHEN
+        featureService.removeFeatureParameter(featureName, parameterKey);
 
         // THEN
         Mockito.verify(featureConfigurationRepositoryMock, Mockito.times(1)).findOne(featureName);

@@ -16,5 +16,6 @@ public class FeatureNotFoundException extends RuntimeException {
     @Builder
     public FeatureNotFoundException(String message, Throwable cause, String featureName) {
         super(message, cause);
+        this.featureName = featureName;
     }
 }

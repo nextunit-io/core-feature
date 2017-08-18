@@ -2,6 +2,7 @@ package io.nextunit.core.feature.service;
 
 import io.nextunit.core.feature.entity.FeatureConfiguration;
 import io.nextunit.core.feature.exception.FeatureNotFoundException;
+import io.nextunit.core.feature.exception.FeatureParameterNotFoundException;
 import io.nextunit.core.feature.repository.FeatureConfigurationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -110,6 +111,31 @@ public class FeatureService {
         }
 
         return featureConfiguration;
+    }
+
+    /**
+     * Removes a parameter at the feature configuration.
+     *
+     * @param featureName The name of the feature.
+     * @param key         Parameter key, which should be removed.
+     */
+    public void removeFeatureParameter(String featureName, String key) {
+        FeatureConfiguration configuration = getFeatureConfiguration(featureName);
+
+        if (configuration.getParameters() == null ||
+                !configuration.getParameters().containsKey(key)) {
+            throw FeatureParameterNotFoundException
+                    .builder()
+                    .message(String.format("Parameter '%s' not found in feature '%s'.",
+                            key,
+                            featureName))
+                    .configuration(configuration)
+                    .key(key)
+                    .build();
+        }
+
+        configuration.getParameters().remove(key);
+        featureConfigurationRepository.save(configuration);
     }
 
     /**

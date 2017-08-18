@@ -78,3 +78,46 @@ public class TestClass {
     }
 }
 ```
+
+### Add feature parameters
+```Java
+@Service
+public class TestClass {
+    @Autowired
+    private FeatureToggleService featureToggleService;
+    
+    pubic void someMethod() {
+        [...]
+        featureToggleService.addParameters("feature-name", "key", "serializable object");
+    }
+}
+```
+
+### Remove feature parameters
+```Java
+@Service
+public class TestClass {
+    @Autowired
+    private FeatureToggleService featureToggleService;
+    
+    pubic void someMethod() {
+        [...]
+        featureToggleService.removeParameter("feature-name", "key");
+    }
+}
+```
+
+### Get feature configuration
+```Java
+@Service
+public class TestClass {
+    @Autowired
+    private FeatureToggleService featureToggleService;
+    
+    pubic void someMethod() {
+        [...]
+        FeatureConfiguration featureConfiguration = featureToggleService
+            .getFeatureConfiguration("feature-name");
+    }
+}
+```
