@@ -15,7 +15,7 @@ import org.springframework.context.annotation.ImportResource;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication
-@ComponentScan({"io.nextunit.core.featuretoggle"})
+@ComponentScan({"io.nextunit.core.feature"})
 public class Application extends WebMvcConfigurerAdapter {
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
