@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Configuration
 @ImportResource({"classpath:/configuration/feature-toggle-mvc.xml"})
-@EntityScan(basePackages = "io.nextunit.core.featuretoggle.entity")
+@EntityScan(basePackages = "io.nextunit.core.feature.entity")
 @EnableJpaRepositories
 public class FeatureToggleConfiguration {
 }
